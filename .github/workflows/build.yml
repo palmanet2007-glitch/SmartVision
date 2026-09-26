@@ -6,7 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Extrair codigo
-        run: mkdir src && tar -xJf SmartVision-src.tar.xz -C src
+        run: |
+          mkdir src && tar -xJf SmartVision-src.tar.xz -C src
+          for f in SmartVision-update*.tar.xz; do [ -f "$f" ] && tar -xJf "$f" -C src; done
+          true
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
