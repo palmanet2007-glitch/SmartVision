@@ -1,0 +1,24 @@
+name: Compilar APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extrair codigo
+        run: mkdir src && tar -xJf SmartVision-src.tar.xz -C src
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+      - name: Compilar
+        working-directory: src
+        run: gradle --no-daemon assembleFullDebug assembleLiteDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SmartVision-APK
+          path: src/app/build/outputs/apk/*/debug/*.apk
